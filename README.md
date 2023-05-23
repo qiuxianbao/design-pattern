@@ -20,6 +20,10 @@ Java 23种设计模式
 以下简单说明一下项目的结构。每种设计模式下都会有2个包，一个是frame（用于编写设计plantuml对应的代码），一个是demo（用于编写示例），具体的plantuml类图代码会放在resource下面。
 
 ```
+├─doc
+│  ├─behavior
+│  ├─create
+│  └─struct
 └─src
     ├─main
     │  ├─java
