@@ -1,0 +1,43 @@
+@startuml
+skinparam linetype ortho
+
+title 装饰者
+
+interface Component {
+    --
+    + sampleOperation(): void
+}
+note top of Component: 【抽象构件】\n给出一个抽象接口
+
+class ConcreteComponent {
+    --
+    + @Override sampleOperation(): void
+}
+Component <|.. ConcreteComponent
+note left of ConcreteComponent: 【具体构件】\n实现构件类的中方抽象方法
+
+class Decorator {
+    - component: Component
+    --
+    + Decorator()
+    + Decorator(Component)
+    + @Override sampleOperation(): void
+}
+Component <|.. Decorator
+Decorator o--> Component
+note right of Decorator::sampleOperation
+    【装饰角色】，持有一个构件对象实例
+    通过component引用，调用构件方法
+end note
+
+class ConcreteDecorator {
+    --
+    + @Override sampleOperation(): void
+}
+Decorator <|-- ConcreteDecorator
+note bottom of ConcreteDecorator: 【具体装饰角色】\n给构件对象扩展功能
+note right of ConcreteDecorator::sampleOperation
+    直接调用super.sampleOperation调用
+    可以减少了和构件的关联
+end note
+@enduml

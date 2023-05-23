@@ -1,0 +1,30 @@
+@startuml
+skinparam linetype ortho
+
+title 适配器模式
+
+interface Target {
+    --
+    + sampleOperation1(): void
+    + sampleOperation2(): void
+}
+note top of Target: 【目标角色】\n所期待的接口，目标可以是具体的类或抽象接口
+
+class Adaptee {
+    --
+    + sampleOperation1(): void
+}
+note top of Adaptee: 【源角色】\n需要适配的接口（缺少的）
+
+class Adapter {
+    - adaptee: Adaptee
+    --
+    + Adapter(Adaptee)
+    + @Override sampleOperation1(): void
+    + @Override sampleOperation2(): void
+}
+Target <|.. Adapter
+Adaptee <-- Adapter
+note bottom of Adapter: 【适配器角色】\n把源接口转换成目标接口
+
+@enduml

@@ -1,0 +1,63 @@
+@startuml
+skinparam linetype ortho
+
+title 简单工厂（静态工厂）
+
+class Creator {
+    --
+    + {static} factory(type): Product
+}
+note top of Creator: 【工厂类】\n所有的产品都由该类产生，可通过type类型处理与应用有关的逻辑，\n客户端可直接调用
+Creator .> ConcreteProduct
+
+interface Product{
+}
+note right of Product: 【产品接口角色】\n是简单工厂所创建出的对象的父类
+
+class ConcreteProduct {
+    --
+    + ConcreteProduct()
+}
+note right of ConcreteProduct: 【具体产品实现类】
+Product <|.. ConcreteProduct
+@enduml
+
+
+@startuml
+skinparam linetype ortho
+
+title 简单工厂（抽象产品角色省略）
+
+class Creator {
+    --
+    +  {static} factory(): ConcreteProduct
+}
+note right of Creator: 【工厂类】\n调用方法直接产生ConcreteProduct，\n客户端可直接调用
+ConcreteProduct <.. Creator : creates
+
+class ConcreteProduct {
+    --
+    + ConcreteProduct()
+}
+note right of ConcreteProduct: 【省略抽象产品，直接用具体产品】
+
+@enduml
+
+
+@startuml
+skinparam linetype ortho
+
+title 简单工厂（三个角色全部合并）
+
+class ConcreteProduct {
+    --
+    + ConcreteProduct()
+    +  {static} factory(): ConcreteProduct
+}
+note right of ConcreteProduct: 【三个角色合并】
+
+ConcreteProduct <.. ConcreteProduct
+@enduml
+
+
+

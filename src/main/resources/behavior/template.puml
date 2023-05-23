@@ -1,0 +1,30 @@
+@startuml
+skinparam linetype ortho
+
+title 模板
+
+class AbstractClass {
+    --
+    + templateMethod(): void
+    # {abstract} doOperation1(): void
+    # {abstract} doOperation2(): void
+    - {final} doOperation3(): void
+}
+note top of AbstractClass: 【抽象模板角色】\n定义一个或者多个抽象方法，由子类实现\n定义一个模板方法，声明逻辑架构，具体逻辑组成包括一些抽象操作
+note left of AbstractClass::templateMethod
+    templateMethod中调用doOperation1()、doOperation2()、doOperation3()
+end note
+
+note left of AbstractClass::doOperation3
+    doOperation3是基本方法（已经实现），不允许继承
+end note
+
+class ConcreteClass {
+    --
+    # @Override doOperation1(): void
+    # @Override doOperation2(): void
+}
+AbstractClass <|-- ConcreteClass
+note bottom of ConcreteClass: 【具体模板角色】\n实现抽象方法，不同的模板可以使顶层逻辑实现各不相同
+
+@enduml

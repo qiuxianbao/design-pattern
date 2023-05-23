@@ -1,0 +1,73 @@
+@startuml
+skinparam linetype ortho
+
+title 安全式合成模式，管理子对象的方法只在树叶构件中出现
+
+interface Component {
+    --
+    + sampleOperation(): void
+    + component(): Component
+}
+note top of Component: 【抽象构件】\n定义出公共接口
+
+class Leaf {
+    --
+    + @Override sampleOperation(): void
+    + @Override component(): Component
+}
+Component <|.. Leaf
+note bottom of Leaf: 【树叶构件】\n抽象构件的实现
+
+class Composite {
+    - componentVector: Vector<Component> = new Vector()
+    --
+    + @Override sampleOperation(): void
+    + @Override component(): Component
+    + add(Component): void
+    + remove(Component): void
+    + components(): Enumeration
+}
+Component <|.. Composite
+Component "0..." --o Composite
+note bottom of Composite: 【树枝构件】\n除了抽象构件的实现外，还包括对子对象的管理方法\n sampleOperation方法会通过components依次调用每个sampleOperation
+@enduml
+
+@startuml
+skinparam linetype ortho
+
+title 透明式合成模式，管理子对象的方法出现在构件中
+
+interface Component {
+    --
+    + sampleOperation(): void
+    + add(Component): void
+    + remove(Component): void
+    + elements(): Enumeration
+    + component(): Component
+}
+note top of Component: 【抽象构件】\n定义出公共接口
+
+class Leaf {
+    --
+    + @Override sampleOperation(): void
+    + @Override add(Component): void
+    + @Override remove(Component): void
+    + @Override elements(): Enumeration
+    + @Override component(): Component
+}
+Component <|.. Leaf
+note bottom of Leaf: 【树叶构件】\n对子对象的管理方法只能空实现
+
+class Composite {
+    - componentVector: Vector<Composite> = new Vector()
+    --
+    + @Override sampleOperation(): void
+    + @Override add(Component): void
+    + @Override remove(Component): void
+    + @Override components(): Enumeration
+    + @Override component(): Component
+}
+Component <|.. Composite
+Component "0..." --o Composite
+note bottom of Composite: 【树枝构件】\n实现所有方法
+@enduml

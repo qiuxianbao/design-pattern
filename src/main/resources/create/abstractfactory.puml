@@ -1,0 +1,77 @@
+
+@startuml
+skinparam linetype ortho
+
+title 抽象工厂（多组不同类型产品）
+
+
+interface Creator {
+    --
+    + factoryA(): ProductA
+    + factoryB(): ProductB
+}
+note top of Creator: 【工厂接口角色】用于生产不同等级的产品
+note right of Creator::factoryA
+    产品等级A的生产方法
+end note
+note right of Creator::factoryB
+    产品等级B的生产方法
+end note
+
+class ConcreteCreator1 {
+    --
+    + @Override factoryA(): ProductA
+    + @Override factoryB(): ProductB
+}
+note left of ConcreteCreator1: 【具体工厂1】\n会生产1类型的A和B产品
+Creator <|.. ConcreteCreator1
+ConcreteCreator1 ..> ProductA1
+ConcreteCreator1 ..> ProductB1
+
+class ConcreteCreator2 #EEE{
+    --
+    + @Override factoryA(): ProductA
+    + @Override factoryB(): ProductB
+}
+ConcreteCreator1 -right[hidden] ConcreteCreator2
+Creator <|.. ConcreteCreator2
+ConcreteCreator2 ..> ProductA2
+ConcreteCreator2 ..> ProductB2
+
+interface ProductA{
+}
+note top of ProductA: 【产品族A接口角色】\n工厂方法中所创建产品ProductAx的父类
+
+class ProductA1 {
+    --
+    + ProductA1()
+}
+note bottom of ProductA1: 【产品A的实现1类型】
+ProductA <|.. ProductA1
+
+class ProductA2 #EEE {
+    --
+    + ProductA2()
+}
+ProductA <|.. ProductA2
+
+
+interface ProductB{
+}
+note left of ProductB: 【产品族B接口角色】\n工厂方法中所创建产品ProductBx的父类
+ProductA2 ---[hidden] ProductB
+
+class ProductB1 {
+    --
+    + ProductB1()
+}
+note bottom of ProductB1: 【产品B的具体1类类型】
+ProductB <|.. ProductB1
+
+class ProductB2 #EEE {
+    --
+    + ProductB2()
+}
+ProductB <|.. ProductB2
+
+@enduml

@@ -1,0 +1,122 @@
+@startuml
+skinparam linetype ortho
+
+title 迭代器(白箱聚集与外禀迭代子)
+
+interface Iterator {
+	--
+	+ first(): void
+	+ next(): void
+	+ done(): boolean
+	+ currentItem(): Object
+}
+note left of Iterator: 【迭代器接口角色】\n声明遍历元素所需的接口\n第一个元素\n下一个元素\n是否迭代结束\获取n当前元素
+
+class ConcreteIterator {
+	- agg: ConcreteAggregate
+	- index: int
+	- size: int
+	--
+	+ ConcreteIterator(ConcreteAggregate agg)
+	+ @Override first(): void
+	+ @Override next(): void
+	+ @Override currentItem(): Object
+	+ @Override done(): boolean
+}
+Iterator <|.. ConcreteIterator
+ConcreteIterator -> ConcreteAggregate
+note left of ConcreteIterator: 【具体迭代器角色】\n实现迭代器声明的接口\n存储迭代过程中集合下表位置的位置
+
+abstract class Aggregate {
+	--
+	+ createIterator(): Iterator
+}
+note right of Aggregate: 【抽象集合角色】\n声明创建迭代器对象的接口
+
+class ConcreteAggregate {
+	- objs: Object[] = {}
+	--
+	+ @Override createIterator: Iterator
+	+ size(): int
+	+ getElement(int index): Object
+}
+Aggregate <|-- ConcreteAggregate
+note right of ConcreteAggregate: 【具体集合实现角色】\n定义元素集合\n创建迭代器，传this\n集合大小，获取当前元素
+
+class Client {
+	- it: Iterator
+	- agg: Aggregate
+	--
+	+ operation(): void
+	+ main(): void
+}
+Client -> Aggregate
+Iterator <- Client
+note top of Client: 【客户端角色】\n持有对集合及迭代子对象的引用\n通过operation对集合进行元素迭代
+
+@enduml
+
+
+
+@startuml
+skinparam linetype ortho
+
+title 迭代器(黑箱聚集与内禀迭代子)
+
+interface Iterator {
+	--
+	+ first(): void
+	+ next(): void
+	+ done(): boolean
+	+ currentItem(): Object
+}
+note left of Iterator: 【迭代器接口角色】
+
+abstract class Aggregate {
+	--
+	+ {abstract} createIterator(): Iterator
+}
+note right of Aggregate: 【抽象集合角色】
+
+class ConcreteAggregate {
+	- objs: Object[] = {}
+	--
+	+ @Override createIterator: Iterator
+	+ size(): int
+	+ getElement(int index): Object
+	--
+	- ConcreteIterator
+}
+Aggregate <|-- ConcreteAggregate
+note left of ConcreteAggregate: 【具体集合实现角色】
+note right of ConcreteAggregate::ConcreteIterator
+    与白箱模式相比，此处有变化，将原有迭代器放到了集合内部
+end note
+
+package inner.class #EEE{
+    class ConcreteIterator {
+        - agg: ConcreteAggregate
+        - index: int
+        - size: int
+        --
+        + ConcreteIterator(ConcreteAggregate agg)
+        + @Override first(): void
+        + @Override next(): void
+        + @Override currentItem(): Object
+        + @Override done(): boolean
+    }
+    note top of ConcreteIterator: 【具体迭代器角色】是一个内部类\n放在ConcreteAggregate中作为私有成员
+}
+
+class Client {
+	- it: Iterator
+	- agg: Aggregate
+	--
+	+ operation(): void
+	+ main(): void
+}
+Client -> Aggregate
+Iterator <- Client
+note top of Client: 【客户端角色】\n持有对集合及迭代子对象的引用\n通过operation对集合进行元素迭代
+
+@enduml

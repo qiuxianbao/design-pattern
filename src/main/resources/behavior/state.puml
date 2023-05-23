@@ -1,0 +1,27 @@
+@startuml
+skinparam linetype ortho
+
+title 状态
+
+interface State {
+	--
+	+ sampleOperation(): void
+}
+note right of State: 【状态接口角色】\n声明状态所对应的行为
+
+class ConcreteState {
+	--
+	+ @Override sampleOperation(): void
+}
+State <|.. ConcreteState
+note right of ConcreteState: 【具体状态角色】\n每一个具体类实现一种特定的行为
+
+class Context {
+    --
+    + sampleOperation(): void
+    --
+    + state: State
+}
+Context o- State
+note top of Context: 【环境角色】\n1.设置具体状态实例\n2.调用状态的行为
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+skinparam linetype ortho
+
+title 单例（饿汉式）
+
+class EagerSingleton {
+    - {static} instance: EagerSingleton = new EagerSingleton()
+    --
+    - EagerSingleton()
+    + {static} getInstance(): EagerSingleton
+}
+EagerSingleton --> EagerSingleton: creates
+@enduml
+
+@startuml
+skinparam linetype ortho
+
+title 单例（懒汉式）
+
+class LazySingleton {
+    - {static} instance: LazySingleton = null
+    --
+    - LazySingleton()
+    + {static} getInstance(): LazySingleton
+}
+LazySingleton --> LazySingleton: creates
+@enduml

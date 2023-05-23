@@ -1,0 +1,28 @@
+@startuml
+skinparam linetype ortho
+
+title 责任链
+
+abstract class Handler {
+	--
+	+ {abstract} handleRequest(): void
+	--
+	# successor: Handler
+}
+Handler "0..."-o Handler
+note right of Handler: 【抽象处理者】\n通常由抽象类或者接口实现\n可以声明一个处理请求的接口\n设置方法用于设定和返回下家
+
+class ConcreteHandler {
+	--
+	+ @Override handleRequest(): void
+}
+Handler <|-- ConcreteHandler
+note right of ConcreteHandler: 【具体处理者】\n接收到请求后，判断getSuccessor()\n如果有下家，则调用下家的handleRequest\n否则，直接处理请求
+
+class Client {
+	- handler: Handler
+}
+Client -> Handler
+note top of Client: 【客户端】\n设置完handler的关系后，就会让最后一个去调用了
+
+@enduml

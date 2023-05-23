@@ -1,0 +1,39 @@
+@startuml
+skinparam linetype ortho
+
+title 观察者
+
+interface Subject {
+    --
+    + attach(Observer observer): void
+    + detach(Observer observer): void
+    ~ void notifyObservers();
+}
+note left of Subject: 【主题接口】\n提供增加、删除、通知观察者对象的操作
+
+class ConcreteSubject {
+    - observerVector: Vector<Observer> = new Vector()
+    --
+    + @Override attach(Observer observer): void
+    + @Override detach(Observer observer): void
+    ~ @Override void notifyObservers();
+    + observers(): Enumeration
+}
+Subject <|.. ConcreteSubject
+ConcreteSubject o-"0..." Observer
+note left of ConcreteSubject: 【具体主题角色】\n将有关状态存入具体观察者对象\n在具体主题内部状态发生变化时，给观察者发出通知
+
+interface Observer {
+    --
+    + update(): void
+}
+note right of Observer: 【观察者接口角色】\n更新接口，只包含一个update()方法\n在得到主题通知时更新自己
+
+class ConcreteObserver {
+    --
+    + @Override update(): void
+}
+Observer <|.. ConcreteObserver
+note right of ConcreteObserver: 【具体观察者角色】\n观察者接口的具体实现
+
+@enduml

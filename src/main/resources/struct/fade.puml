@@ -1,0 +1,35 @@
+@startuml
+skinparam linetype ortho
+
+title 外观（门面）
+
+class FadeA {
+}
+FadeA ..> SubSystemA
+FadeA ..> SubSystemB
+FadeA -right[hidden] FadeB
+note top of FadeA: 【门面角色】\n接收客户端请求，可以调用一个或多个子系统的功能
+
+class FadeB {
+}
+FadeB ..> SubSystemB
+FadeB ..> SubSystemE
+
+class SubSystemA {
+}
+note left of SubSystemA: 【子系统角色】\n可以有一个或者多个子系统
+
+class SubSystemB {
+}
+SubSystemB ..> SubSystemC
+SubSystemB ..> SubSystemD
+
+class SubSystemC {
+}
+
+class SubSystemD {
+}
+
+class SubSystemE {
+}
+@enduml

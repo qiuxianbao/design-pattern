@@ -1,0 +1,35 @@
+@startuml
+skinparam linetype ortho
+
+title 代理
+
+abstract Subject {
+    --
+    + request(): void
+}
+note top of Subject: 【抽象主题】\n声明了真实主题和代理主题共有的接口或抽象类\n保证在任何可以使用真实主题的情况下都可以使用代理主题
+
+class RealSubject {
+    --
+    + RealSubject()
+    + @Override request(): void
+}
+Subject <|-- RealSubject
+note right of RealSubject: 【真实主题】\n，主题的具体实现
+
+class ProxySubject {
+    - realSubject: RealSubject
+    --
+    + ProxySubject()
+    + @Override request(): void
+    - preRequest(): void
+    - afterRequest(): void
+}
+Subject <|-- ProxySubject
+ProxySubject -> RealSubject
+note bottom of ProxySubject: 【代理主题】\n包含对真实主题的引用，从而操作真实主题
+note left of ProxySubject::request
+    继承来的request方法，可以调用realSubject.request
+    在前后调用preRequest、afterRequest
+end note
+@enduml

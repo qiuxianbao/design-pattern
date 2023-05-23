@@ -1,0 +1,102 @@
+@startuml
+skinparam linetype ortho
+
+title 单纯享元，所有享元对象可以共享
+
+class FlyweightFactory {
+    - cache: HashMap<Character, Flyweight>
+    --
+    + FlyweightFactory()
+    + factory(Character intrinsicState): Flyweight
+    + checkFlyweight(): void
+}
+FlyweightFactory o-> Flyweight
+note bottom of FlyweightFactory: 【享元工厂角色】\n负责创建和管理享元角色
+note left of FlyweightFactory::factory
+    会判断cache中是否存在Flyweight
+    存在返回，不存在则新建
+end note
+
+abstract class Flyweight {
+    + {abstract} Operation(String state):void
+}
+note right of Flyweight: 【抽象享元角色】\n规定需要实现的公共接口
+
+class ConcreteFlyweight {
+    - intrinsicState: Character;
+    --
+    + ConcreteFlyweight(Character intrinsicState)
+    + @Override Operation(String state):void
+}
+note right of ConcreteFlyweight: 【具体享元角色】\n包含内蕴状态，从而使得享元对象可以在系统中共享
+Flyweight <|-- ConcreteFlyweight
+
+class Client {
+    - flyweightFactory: FlyweightFactory
+    --
+    main():void
+}
+Client --> FlyweightFactory
+
+@enduml
+
+
+@startuml
+skinparam linetype ortho
+
+title 复合享元，本身不能共享，但是可以分解成单纯享元后共享
+
+class FlyweightFactory {
+    - cache: HashMap<Character, Flyweight>
+    --
+    + FlyweightFactory()
+    + factory(Character intrinsicState): Flyweight
+    + factory(String compositeState): Flyweight
+    + checkFlyweight(): void
+}
+FlyweightFactory o-> Flyweight
+note bottom of FlyweightFactory: 【享元工厂角色】\n负责创建和管理享元角色
+note left of FlyweightFactory::factory
+    当参数是Character时，
+    会判断cache中是否存在Flyweight, 存在返回，不存在则新建
+
+    当参数是String时，
+    创建一个ConcreteCompositeFlyweight, 用于返回
+    将String切分成char，通过add方法添加到复合享元对象集合中
+end note
+
+abstract class Flyweight {
+    + {abstract} Operation(String state):void
+}
+note top of Flyweight: 【抽象享元角色】\n规定需要实现的公共接口
+
+class ConcreteFlyweight {
+    - intrinsicState: Character;
+    --
+    + ConcreteFlyweight(Character intrinsicState)
+    + @Override Operation(String state):void
+}
+note right of ConcreteFlyweight: 【具体享元角色】\n包含内蕴状态，从而使得享元对象可以在系统中共享
+Flyweight <|-- ConcreteFlyweight
+
+
+class ConcreteCompositeFlyweight {
+    - composite: HashMap<Character, Flyweight>
+    --
+    + ConcreteCompositeFlyweight(String compositeState)
+    + add(Character c, Flyweight fly): void
+    + @Override Operation(String state):void
+}
+note right of ConcreteCompositeFlyweight: 【组合享元角色】\n不能共享，但是包含一个可共享的纯享元对象集合
+Flyweight <|- ConcreteCompositeFlyweight
+ConcreteCompositeFlyweight o-->  Flyweight
+
+
+class Client {
+    - flyweightFactory: FlyweightFactory
+    --
+    main():void
+}
+Client --> FlyweightFactory
+
+@enduml

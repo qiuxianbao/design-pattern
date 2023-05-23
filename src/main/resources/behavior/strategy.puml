@@ -1,0 +1,30 @@
+@startuml
+skinparam linetype ortho
+
+title 策略
+
+class Context {
+    - strategy: Strategy
+    --
+    + contextInterface(): void
+}
+Context o- Strategy
+note top of Context: 【环境角色】\n持有一个抽象策略类的引用
+note left of Context::contextInterface
+    通过引用调用strategy的strategyInterface
+end note
+
+abstract class Strategy {
+    --
+    + {abstract} strategyInterface(): void
+}
+note top of Strategy: 【抽象策略角色】\n通常由一个接口或抽象类实现
+
+class ConcreteStrategy {
+    --
+    + @Override strategyInterface(): void
+}
+Strategy <|-- ConcreteStrategy
+note bottom of ConcreteStrategy: 【具体策略角色】\n封装了相关算法或行为
+
+@enduml

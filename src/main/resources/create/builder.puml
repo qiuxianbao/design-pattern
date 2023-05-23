@@ -1,0 +1,39 @@
+@startuml
+skinparam linetype ortho
+
+title 建造者
+
+class Director {
+    - builder: Builder = null;
+    --
+    + construct(): void
+}
+Director o- Builder
+note top of Director: 【导演角色】\nconstruct方法会依次会调用具体的建造者的各个build来创建产品对象
+note left of Director::construct
+     builder = new ConcreteBuilder()
+    负责调用各个build
+end note
+
+abstract class Builder{
+    --
+    + {abstract} buildPart1(): void
+    + {abstract} buildPart2(): void
+    + {abstract} retrieveResult(): Product
+}
+note right of Builder: 【抽象建造者角色】\n用于规范产品对象各个部分的建造\n一般来说有多少个产品零件数量就有多少建造方法
+
+class ConcreteBuilder{
+    - product: Product = new Product();
+    --
+    + @Override buildPart1(): void
+    + @Override buildPart2(): void
+    + @Override retrieveResult(): Product
+}
+Builder <|-- ConcreteBuilder
+ConcreteBuilder -> Product: creates
+note bottom of ConcreteBuilder: 【具体建造者】\n1、给出创建实例操作\n2、在建造过程中，提供产品实例
+
+class Product {}
+note right of Product: 【产品角色】\n假设最终的产品只有2个零件：part1和part2
+@enduml

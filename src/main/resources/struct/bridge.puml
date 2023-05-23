@@ -1,0 +1,39 @@
+@startuml
+skinparam linetype ortho
+
+title 桥接模式
+
+abstract class Abstraction {
+    # Implementor: Implementor
+    --
+    + {abstract} operation(): void
+}
+Abstraction o- Implementor
+note top of Abstraction: 【抽象化角色】\n给出抽象化声明，保存一个对实现化对象的引用
+
+class RefinedAbstraction {
+    --
+    + @Override operation(): void
+}
+Abstraction <|-- RefinedAbstraction
+note left of RefinedAbstraction: 【修正抽象化角色】\n扩展了抽象化角色功能
+
+abstract class Implementor {
+    --
+    + {abstract} operationImpl(): void
+}
+note top of Implementor: 【实现化角色】\n给出实现化的声明
+
+class ConcreteImplementorA {
+    --
+    + @Override operationImpl(): void
+}
+Implementor <|-- ConcreteImplementorA
+note bottom of ConcreteImplementorA: 【具体实现化角色】\n给出实现化的具体实现
+
+class ConcreteImplementorB {
+    --
+    + @Override operationImpl: void
+}
+Implementor <|-- ConcreteImplementorB
+@enduml

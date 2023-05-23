@@ -1,0 +1,185 @@
+@startuml
+skinparam linetype ortho
+
+title 备忘录-快照模式（白箱）
+
+class Originator {
+	--
+	+ createMemento(): Memento
+	+ restoreMemento(Memento memento): void
+	--
+	+ state: String
+}
+Originator "wide".> Memento
+note bottom of Originator: 【发起人角色】\n持有自身内部状态\n根据内部状态创建备忘录接口\n恢复备忘录
+
+class Caretaker {
+	- memento: Memento
+	--
+	+ saveMemento(Memento memento): void
+	+ retrieveMemento(): Memento
+}
+Memento "wide"-o Caretaker
+note bottom of Caretaker: 【负责人角色】\n保存备忘录\n恢复备忘录
+
+class Memento {
+	--
+	+ Memento(String state)
+	--
+	+ state: String
+}
+note bottom of Memento: 【备忘录角色】\n存储发起人的内部状态
+
+class Client {
+	- {static} o: Originator
+	- {static} c: Caretaker
+	--
+	+ main(): void
+}
+Client --> Originator
+Client --> Caretaker
+note top of Client: 【客户端角色】\n通过发起人创建备忘录\n通过负责人保存备忘录\n更改发起人状态\n恢复发起人状态
+
+@enduml
+
+@startuml
+skinparam linetype ortho
+
+title 备忘录-快照模式（白箱）
+
+class Originator {
+	--
+	+ createMemento(): Memento
+	+ restoreMemento(Memento memento): void
+	--
+	+ state: String
+}
+Originator "wide".> Memento
+note bottom of Originator: 【发起人角色】\n持有自身内部状态\n根据内部状态创建备忘录接口\n恢复备忘录
+
+class Caretaker {
+	- memento: Memento
+	--
+	+ saveMemento(Memento memento): void
+	+ retrieveMemento(): Memento
+}
+Memento "wide"-o Caretaker
+note bottom of Caretaker: 【负责人角色】\n保存备忘录\n恢复备忘录
+
+class Memento {
+	--
+	+ Memento(String state)
+	--
+	+ state: String
+}
+note bottom of Memento: 【备忘录角色】\n存储发起人的内部状态
+
+class Client {
+	- {static} o: Originator
+	- {static} c: Caretaker
+	--
+	+ main(): void
+}
+Client --> Originator
+Client --> Caretaker
+note top of Client: 【客户端角色】\n通过发起人创建备忘录\n通过负责人保存备忘录\n更改发起人状态\n恢复发起人状态
+
+@enduml
+
+@startuml
+skinparam linetype ortho
+
+title 备忘录-快照模式（白箱）
+
+class Originator {
+	--
+	+ createMemento(): Memento
+	+ restoreMemento(Memento memento): void
+	--
+	+ state: String
+}
+Originator "wide".> Memento
+note bottom of Originator: 【发起人角色】\n持有自身内部状态\n根据内部状态创建备忘录接口\n恢复备忘录
+
+class Caretaker {
+	- memento: Memento
+	--
+	+ saveMemento(Memento memento): void
+	+ retrieveMemento(): Memento
+}
+Memento "wide"-o Caretaker
+note bottom of Caretaker: 【负责人角色】\n保存备忘录\n恢复备忘录
+
+class Memento {
+	--
+	+ Memento(String state)
+	--
+	+ state: String
+}
+note bottom of Memento: 【备忘录角色】\n存储发起人的内部状态
+
+class Client {
+	- {static} o: Originator
+	- {static} c: Caretaker
+	--
+	+ main(): void
+}
+Client --> Originator
+Client --> Caretaker
+note top of Client: 【客户端角色】\n通过发起人创建备忘录\n通过负责人保存备忘录\n更改发起人状态\n恢复发起人状态
+
+@enduml
+
+
+@startuml
+skinparam linetype ortho
+
+title 备忘录-快照模式（黑箱）
+
+class Originator {
+    - memento: memento
+	--
+	+ createMemento(): MementoIF
+	+ restoreMemento(MementoIF memento): void
+	--
+	+ state: String
+}
+Originator "wide".> MementoIF
+note bottom of Originator: 【发起人角色】\n变化是将Memento变成了内部类
+note left of Originator::memento
+    protected class implement MementoIF
+end note
+
+class Caretaker {
+	- memento: MementoIF
+	--
+	+ saveMemento(MementoIF memento): void
+	+ retrieveMemento(): Memento
+}
+MementoIF "narrow"-o Caretaker
+note bottom of Caretaker: 【负责人角色】
+
+interface MementoIF {
+}
+
+class Memento {
+	--
+	+ Memento(String state)
+	--
+	+ state: String
+}
+note bottom of Memento: 【备忘录角色】\n变成了内部类
+Originator <--"is a number of" Memento
+MementoIF <|.. Memento
+
+class Client {
+	- {static} o: Originator
+	- {static} c: Caretaker
+	--
+	+ main(): void
+}
+Client --> Originator
+Client --> Caretaker
+note top of Client: 【客户端角色】
+
+@enduml

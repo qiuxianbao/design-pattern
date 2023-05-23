@@ -1,0 +1,51 @@
+@startuml
+skinparam linetype ortho
+
+title 中介者 ???不理解???
+
+abstract class Mediator {
+	--
+	+ {abstract} colleagueChanged(Colleague c): void
+}
+note top of Mediator: 【抽象中介者角色】
+
+class ConcreteMediator {
+	--
+	+ @Override colleagueChanged(Colleague c): void
+	+ createConcreteMediator()
+	--
+	- colleague1: Colleague
+	- colleague2: Colleague
+}
+Mediator <|-- ConcreteMediator
+ConcreteMediator -> Colleague1
+ConcreteMediator -> Colleague2
+note bottom of ConcreteMediator: 【具体中介者角色】\n createConcreteMediator会赋值2个Colleague
+
+abstract class Colleague {
+	--
+	+ Colleague(Mediator m)
+	+ {abstract} action(): void
+	+ change(): void
+	--
+	- mediator: Mediator
+}
+Mediator <- Colleague
+note top of Colleague: 【抽象同事角色】
+
+class Colleague1 {
+	--
+	+ Colleague1(Mediator m)
+	+ @Override action(): void
+}
+Colleague <|-- Colleague1
+note right of Colleague1: 【具体同事角色】
+
+class Colleague2 {
+	--
+	+ Colleague2(Mediator m)
+	+ @Override action(): void
+}
+Colleague <|-- Colleague2
+
+@enduml

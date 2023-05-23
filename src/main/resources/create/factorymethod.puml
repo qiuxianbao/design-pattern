@@ -1,0 +1,56 @@
+@startuml
+skinparam linetype ortho
+
+title 工厂方法（多态性工厂）
+
+interface Creator {
+    --
+    + factory(): Product
+}
+note top of Creator: 【工厂接口角色】\n用于生产Product
+Creator .> Product: creates
+
+class ConcreteCreator1 {
+    --
+    + @Override factory(): Product
+}
+note bottom of ConcreteCreator1: 【具体工厂1】\n生产ConcreteProduct1
+Creator <|.. ConcreteCreator1
+
+class ConcreteCreator2 {
+    --
+    + @Override factory(): Product
+}
+Creator <|.. ConcreteCreator2
+
+
+interface Product{
+}
+note top of Product: 【抽象产品】\n工厂方法中所创建产品的父类
+
+class ConcreteProduct1 {
+    --
+    + ConcreteProduct1()
+}
+note bottom of ConcreteProduct1: 【具体产品实现类1】
+Product <|.. ConcreteProduct1
+
+class ConcreteProduct2 {
+    --
+    + ConcreteProduct2()
+}
+Product <|.. ConcreteProduct2
+
+
+class Client {
+    - creator: Creator
+    - product: Product
+    --
+    + {static} main(): void
+}
+note right of Client: 【客户端】\n new ConcreteCreator1().product()
+Client --[hidden] Creator
+Client --> Creator
+Client --> Product
+
+@enduml

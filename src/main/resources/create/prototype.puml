@@ -1,0 +1,39 @@
+
+
+@startuml
+skinparam linetype ortho
+
+title 原型（克隆/复制对象原始类型）
+
+package java.lang #EEE {
+    interface Cloneable{
+    }
+}
+
+interface Prototype {
+    --
+    + clone: Object
+}
+Prototype -|> Cloneable
+note top of Prototype: 【原型接口角色】
+
+class ConcretePrototype {
+    --
+    + @Override clone: Object
+}
+Prototype <|.. ConcretePrototype
+note bottom of ConcretePrototype: 【具体原型】\n被复制的对象，super.clone() = Object#clone
+
+class Client {
+    - prototype: Prototype
+    --
+    + operation(prototype): void
+}
+Client o- Prototype
+note top of Client: 【客户角色】
+note left of Client::operation
+    根据入参原型实例
+    调用clone方法，会复制出一个新的对象
+end note
+
+@enduml

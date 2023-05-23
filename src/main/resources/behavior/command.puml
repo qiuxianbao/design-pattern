@@ -1,0 +1,46 @@
+@startuml
+skinparam linetype ortho
+
+title 命令者
+
+interface Command {
+	--
+	+ execute(): void
+}
+note right of Command: 【命令角色】\n声明用于执行命令的接口
+
+class ConcreteCommand {
+	- receiver: Receiver
+	--
+	+ ConcreteCommand(Receiver receiver)
+	+ @Override execute(): void
+}
+Command <|.. ConcreteCommand
+Receiver <- ConcreteCommand
+note right of ConcreteCommand: 【具体命令角色】\n通过构造方法传递命令的接收者（谁去执行）
+
+class Invoker {
+	- command: Command
+	--
+	+ Invoker(Command command)
+	+ action(): void
+}
+Invoker o- Command
+note top of Invoker: 【调用者】\n通过构造方法下发命令
+
+class Receiver {
+	--
+	+ Receiver()
+	+ action(): void
+}
+note left of Receiver: 【接收者】\n, 用于执行执行具体操作
+
+class Client {
+	--
+	+ main(): void
+}
+Client .> Invoker
+Client ..> Receiver
+note left of Client:【客户端】\n创建命令、接收者、调用者
+
+@enduml

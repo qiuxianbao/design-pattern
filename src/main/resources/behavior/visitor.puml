@@ -1,0 +1,71 @@
+@startuml
+skinparam linetype ortho
+
+title 访问者
+
+interface Visitor {
+	--
+	+ visit(NodeA node): void
+	+ visit(NodeB node): void
+}
+note top of Visitor: 【访问者接口角色】\n声明一个或者多个访问node的操作
+
+class VisitorA {
+	--
+	+ @Override visit(NodeA node): void
+	+ @Override visit(NodeB node): void
+}
+Visitor <|.. VisitorA
+
+class VisitorB {
+	--
+	+ @Override visit(NodeA node): void
+	+ @Override visit(NodeB node): void
+}
+Visitor <|.. VisitorB
+note bottom of VisitorB: 【具体访问者角色】\n实现抽象访问者角色所声明的接口\nvisit()会去调用node.operation操作
+
+abstract class Node {
+	--
+	+ {abstract} accept(Visitor visitor): void
+}
+Visitor <--- Node
+note left of Node: 【抽象节点角色】\n声明一个接受Visitor的操作
+
+class NodeA {
+	--
+	+ @Override accept(Visitor visitor): void
+	+ operationA(): String
+}
+Node <|.. NodeA
+
+class NodeB {
+	--
+	+ @Override accept(Visitor visitor): void
+	+ operationB(): String
+}
+Node <|.. NodeB
+note bottom of NodeB: 【具体节点角色】\n实现抽象节点所规定的操作\naccept会去调用visitor.visit()方法
+
+class ObjectStruct {
+	- nodes: Vector<Node>
+	- node: Node
+	--
+	+ ObjectStruct()
+	+ action(Visitor visit): void
+	+ add(Node node): void
+}
+ObjectStruct o- Node
+note right of ObjectStruct: 【结构对象角色】\n可以添加节点\n循环节点接收访问者\naction()迭代nodes调用accept，从之去执行visit
+
+class Client {
+	- {static} objects: ObjectStruct
+	- {static} visit: Visitor
+	--
+	+ {static} main(): void
+}
+Client -> Visitor
+Client --> ObjectStruct
+note top of Client: 【客户端角色】
+
+@enduml
