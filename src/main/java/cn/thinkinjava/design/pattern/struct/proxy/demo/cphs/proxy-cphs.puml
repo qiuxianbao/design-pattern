@@ -1,0 +1,95 @@
+@startuml
+skinparam linetype ortho
+
+title 使用动态代理自定义Feign实现
+
+namespace java.lang {
+    interface InvocationHandler {
+        + Object invoke(Object proxy, Method method, Object[] args)
+    }
+}
+
+namespace org.springframework {
+    interface FactoryBean {
+        + getObject(): T
+        + getObjectType(): Class<?>
+        + isSingleton(): boolean
+    }
+
+    interface ResourceLoaderAware {
+        + setResourceLoader(ResourceLoader resourceLoader): void
+    }
+
+    interface ApplicationContextAware {
+        + setApplicationContext(ApplicationContext applicationContext): void
+    }
+
+    interface BeanDefinitionRegistryPostProcessor {
+        + postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry): void
+    }
+}
+
+namespace cphs {
+    interface HttpCloudService {
+    }
+}
+
+namespace cphs.annotation {
+    annotation CustomFeignClient
+    annotation CustomRequestMapping
+
+    CustomFeignClient <.. cphs.HttpCloudService
+    CustomRequestMapping <.. cphs.HttpCloudService
+}
+
+namespace cphs.registry {
+
+    class ServiceProxy {
+        --
+        + @Override Object invoke(Object proxy, Method method, Object[] args)
+    }
+'    note top of ServiceProxy
+'        method.getAnnotation(
+'            CustomRequestMapping.class)
+'    end note
+
+    class ServiceFactory {
+        --
+        + @Override getObject(): T
+        + @Override getObjectType(): Class<?>
+        + @Override isSingleton(): boolean
+    }
+'    note left of ServiceFactory::getObject
+'        Proxy.newProxyInstance(
+'            interfaceType.getClassLoader(),
+'            new Class[]{interfaceType},
+'            new ServiceProxy())
+'    end note
+
+    class ServiceBeanDefinitionRegistry {
+        - applicationContext: ApplicationContext
+        - metadataReaderFactory: MetadataReaderFactory
+        - resourcePatternResolver: ResourcePatternResolver
+        --
+         + @Override postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry): void
+         + @Override setApplicationContext(ApplicationContext applicationContext): void
+         + @Override setResourceLoader(ResourceLoader resourceLoader): void
+    }
+    note left of ServiceBeanDefinitionRegistry::postProcessBeanDefinitionRegistry
+        scannerPackages,
+            clazz.isAnnotationPresent(CustomFeignClient.class)
+        definition.setBeanClass(ServiceFactory.class);
+    end note
+
+    cphs.HttpCloudService --[hidden] ServiceProxy
+    java.lang.InvocationHandler <|.... ServiceProxy
+
+    ServiceProxy <. ServiceFactory
+
+    org.springframework.FactoryBean <|.... ServiceFactory
+    org.springframework.ResourceLoaderAware <|.. ServiceBeanDefinitionRegistry
+    org.springframework.ApplicationContextAware <|.. ServiceBeanDefinitionRegistry
+    org.springframework.BeanDefinitionRegistryPostProcessor <|.. ServiceBeanDefinitionRegistry
+}
+
+@enduml
